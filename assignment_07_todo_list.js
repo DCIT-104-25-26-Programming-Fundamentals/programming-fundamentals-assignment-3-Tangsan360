@@ -80,5 +80,79 @@
 // =============================================================================
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
+const readlineSync = require('readline-sync');
+
+function addTask(tasks, description) {
+	if (typeof description !== 'string' || description.trim() === '') return false;
+	tasks.push(description.trim());
+	return true;
+}
+
+function viewTasks(tasks) {
+	if (!Array.isArray(tasks) || tasks.length === 0) {
+		console.log('No tasks found.');
+		return;
+	}
+	console.log('Your Tasks:');
+	for (let i = 0; i < tasks.length; i++) {
+		console.log(`${i + 1}. ${tasks[i]}`);
+	}
+}
+
+function deleteTask(tasks, index) {
+	if (!Number.isInteger(index) || index < 1 || index > tasks.length) return null;
+	const removed = tasks.splice(index - 1, 1)[0];
+	return removed;
+}
+
+function printMenu() {
+	console.log('\n============================');
+	console.log('     TO-DO LIST MENU');
+	console.log('============================');
+	console.log('1. Add task');
+	console.log('2. View tasks');
+	console.log('3. Delete task');
+	console.log('4. Quit');
+}
+
+function main() {
+	const tasks = [];
+	while (true) {
+		printMenu();
+		const choice = readlineSync.questionInt('Enter your choice (1-4): ');
+		switch (choice) {
+			case 1: {
+				const desc = readlineSync.question('Enter task: ');
+				if (addTask(tasks, desc)) console.log(`Task added: "${desc.trim()}"`);
+				else console.log('Error: Task description cannot be empty.');
+				break;
+			}
+			case 2:
+				viewTasks(tasks);
+				break;
+			case 3: {
+				if (tasks.length === 0) {
+					console.log('No tasks to delete.');
+					break;
+				}
+				viewTasks(tasks);
+				const idx = readlineSync.questionInt('Enter task number to delete: ');
+				const removed = deleteTask(tasks, idx);
+				if (removed === null) console.log('Error: Invalid task number.');
+				else console.log(`Task "${removed}" has been removed.`);
+				break;
+			}
+			case 4:
+				console.log('Goodbye!');
+				return;
+			default:
+				console.log('Invalid choice. Please enter a number between 1 and 4.');
+		}
+	}
+}
+
+if (require.main === module) main();
+
+module.exports = { addTask, viewTasks, deleteTask };
 
 
