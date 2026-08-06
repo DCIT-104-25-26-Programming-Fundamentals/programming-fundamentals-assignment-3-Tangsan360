@@ -84,4 +84,100 @@
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
+const readlineSync = require('readline-sync');
+
+function addStudent(records, name, id, scores) {
+	if (typeof name !== 'string' || name.trim() === '') return false;
+	if (!Number.isInteger(id)) return false;
+	if (!Array.isArray(scores) || scores.some(s => typeof s !== 'number' || Number.isNaN(s))) return false;
+	records.push({ name: name.trim(), id, scores });
+	return true;
+}
+
+function average(scores) {
+	if (!Array.isArray(scores) || scores.length === 0) return 0;
+	let sum = 0;
+	for (let i = 0; i < scores.length; i++) sum += scores[i];
+	return sum / scores.length;
+}
+
+function displayAllStudents(records) {
+	if (!Array.isArray(records) || records.length === 0) {
+		console.log('No students have been added yet.');
+		return;
+	}
+	console.log('Name | ID | Scores | Average');
+	for (let i = 0; i < records.length; i++) {
+		const s = records[i];
+		const avg = average(s.scores).toFixed(2);
+		console.log(`${s.name} | ${s.id} | ${s.scores.join(', ')} | ${avg}`);
+	}
+}
+
+function calculateAverageForStudent(records, id) {
+	if (!Number.isInteger(id)) return null;
+	const student = records.find(s => s.id === id);
+	if (!student) return null;
+	return average(student.scores);
+}
+
+function printMenu() {
+	console.log('\n===============================');
+	console.log('   STUDENT RECORD SYSTEM MENU');
+	console.log('===============================');
+	console.log('1. Add student');
+	console.log('2. Display all students');
+	console.log('3. Calculate average score');
+	console.log('4. Quit');
+}
+
+function main() {
+	const records = [];
+	while (true) {
+		printMenu();
+		const choice = readlineSync.questionInt('Enter your choice (1-4): ');
+		switch (choice) {
+			case 1: {
+				const name = readlineSync.question('Student name: ');
+				const id = readlineSync.questionInt('Student ID: ');
+				const count = readlineSync.questionInt('How many scores? ');
+				if (!Number.isInteger(count) || count < 0) {
+					console.log('Error: invalid number of scores.');
+					break;
+				}
+				const scores = [];
+				for (let i = 0; i < count; i++) {
+					const sc = readlineSync.questionFloat(`Enter score ${i + 1}: `);
+					scores.push(sc);
+				}
+				if (addStudent(records, name, id, scores)) {
+					console.log(`Student "${name.trim()}" added successfully.`);
+				} else {
+					console.log('Error: invalid student data.');
+				}
+				break;
+			}
+			case 2:
+				displayAllStudents(records);
+				break;
+			case 3: {
+				const id = readlineSync.questionInt('Enter student ID: ');
+				const avg = calculateAverageForStudent(records, id);
+				if (avg === null) console.log('Error: student ID not found.');
+				else console.log(`${records.find(s => s.id === id).name}'s average score: ${avg.toFixed(2)}`);
+				break;
+			}
+			case 4:
+				console.log('Goodbye!');
+				return;
+			default:
+				console.log('Invalid choice. Please enter a number between 1 and 4.');
+		}
+	}
+}
+
+if (require.main === module) main();
+
+module.exports = { addStudent, displayAllStudents, calculateAverageForStudent };
+
 
