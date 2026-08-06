@@ -59,4 +59,44 @@
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
+const readlineSync = require('readline-sync');
+
+function printTable(num) {
+	console.log(`Multiplication Table for ${num}:`);
+	for (let i = 1; i <= 12; i++) {
+		console.log(`${num}  x  ${i}  =  ${num * i}`);
+	}
+}
+
+function printTablesUpTo(n) {
+	if (!Number.isInteger(n) || n <= 0) return false;
+	for (let k = 1; k <= n; k++) {
+		printTable(k);
+		if (k !== n) console.log('---------------------------');
+	}
+	return true;
+}
+
+function main() {
+	// Part A
+	const num = readlineSync.questionInt('Enter a number for its multiplication table: ');
+	if (!Number.isInteger(num)) {
+		console.log('Error: please enter a valid integer.');
+		return;
+	}
+	printTable(num);
+
+	// Part B
+	const n = readlineSync.questionInt('\nEnter N to print tables from 1 to N: ');
+	if (!Number.isInteger(n) || n <= 0) {
+		console.log('Error: N must be a positive integer.');
+		return;
+	}
+	printTablesUpTo(n);
+}
+
+if (require.main === module) main();
+
+module.exports = { printTable, printTablesUpTo };
+
 
