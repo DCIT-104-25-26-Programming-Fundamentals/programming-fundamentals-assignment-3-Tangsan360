@@ -36,6 +36,46 @@
 // - The main() function must call isPrime() and print the result.
 // - Use readlineSync.questionInt() to read integer input from the user.
 //
+// =============================================================================
+// PROGRAMMING FUNDAMENTALS — Assignment 1
+// Prime Number Checker
+// =============================================================================
+// Implementation notes:
+// - `isPrime(n)` returns `true` for prime numbers and `false` otherwise.
+// - Numbers < 2 are not prime.
+// - The script can be run interactively with `node assignment_01_prime_checker.js`.
+// - Exports `isPrime` for testing or programmatic use.
+
+const readlineSync = require('readline-sync');
+
+/**
+ * Test whether a number is prime.
+ * @param {number} n An integer to test
+ * @returns {boolean} true if n is prime, false otherwise
+ */
+function isPrime(n) {
+	if (!Number.isInteger(n) || n < 2) return false;
+	if (n === 2) return true;
+	if (n % 2 === 0) return false;
+	const limit = Math.floor(Math.sqrt(n));
+	for (let i = 3; i <= limit; i += 2) {
+		if (n % i === 0) return false;
+	}
+	return true;
+}
+
+function main() {
+	const num = readlineSync.questionInt('Enter a number: ');
+	if (isPrime(num)) {
+		console.log(`${num} is a prime number.`);
+	} else {
+		console.log(`${num} is NOT a prime number.`);
+	}
+}
+
+if (require.main === module) main();
+
+module.exports = { isPrime };
 
 //
 // =============================================================================
